@@ -393,46 +393,4 @@ a {
   font-family: monospace;
 }
 
-/* Default (desktop) */
-.canvas {
-  width: 1100px;
-  height: 680px;
-}
 
-.img-anim {
-  max-width: 100%;
-  height: auto;
-  position: absolute;
-}
-
-/* Tablet */
-@media (max-width: 768px) {
-  .canvas {
-    width: 90%;
-    height: auto;
-  }
-
-  .img-anim {
-    width: 70%;
-  }
-
-  .content {
-    padding: 10px;
-  }
-}
-
-/* HP */
-@media (max-width: 480px) {
-  .canvas {
-    width: 100%;
-    height: auto;
-  }
-
-  .img-anim {
-    width: 60%;
-  }
-
-  #typedText, #typedText2, #typedText3 {
-    font-size: 14px;
-  }
-}
