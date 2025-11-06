@@ -12,9 +12,10 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  background-attachment: fixed;
   font-size: 14px;
   font-family: sans-serif;
-  overflow: hidden;
+  overflow-x: hidden;
   transition: background-image 1s ease-in-out; /* biar halus waktu ganti */
 }
 
@@ -28,16 +29,17 @@ a {
 #wrap {
   position: relative;
   margin: 0 auto;
-  width: 1100px;
-  height: 680px;
+  width: 100%;
+  max-width: 1100px;
+  aspect-ratio: 1100 / 680;
   margin-top: 10px;
-  overflow: hidden; /* batas area, biar kucing gak keluar */
+  overflow: hidden;
 }
 
-#wrap, #canvas {
-  background-color: transparent !important;
+#canvas {
+  width: 100%;
+  height: 100%;
 }
-
 
 #typedText {
     position: absolute;
@@ -390,5 +392,36 @@ a {
   margin-top:450px;
   font-size: 25px;
   font-family: monospace;
+
+  /* Responsiveness for smaller screens */
+@media (max-width: 768px) {
+  #typedText, #typedText2, #typedText3, #typedText4, #typedText5,
+  #typedText6, #typedText7, #typedText8, #typedText9, #typedText10,
+  #typedText11, #typedText12, #typedText13 {
+    width: 80%;
+    left: 10%;
+    font-size: 14px;
+  }
+
+  #typedText3, #typedText12, #typedText13 {
+    font-size: 28px;
+    left: 10%;
+    width: 80%;
+    text-align: center;
+  }
+
+  #tabijalan, #tabihalo, #tabikopi, #kucinglari, #tabilarikejar, 
+  #tabitidur, #ayunantabi {
+    width: 25vw; /* ukuran relatif terhadap lebar layar */
+  }
+}
+
+@media (max-width: 480px) {
+  #typedText, #typedText2, #typedText4, #typedText5,
+  #typedText6, #typedText7, #typedText8, #typedText9,
+  #typedText10, #typedText11 {
+    font-size: 12px;
+  }
+}
 
 }
