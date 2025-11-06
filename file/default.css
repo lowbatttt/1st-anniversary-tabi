@@ -371,10 +371,7 @@ a {
   height: 680px;
 }
 #error {
-  margin: 0 auto;
-  text-align: center;
-  margin-top: 60px;
-  display: none;
+  display: none !important;
 }
 .hand {
   cursor: pointer;
@@ -392,6 +389,7 @@ a {
   font-size: 25px;
   font-family: monospace;
 }
+
 
 
 
