@@ -392,8 +392,10 @@ a {
 
 /* Default (desktop) */
 .canvas {
-  width: 1100px;
-  height: 680px;
+  width: 100vw;
+  height: 90vh;
+  display: block;
+  margin: 0 auto;
 }
 
 .img-anim {
@@ -430,10 +432,9 @@ a {
   }
 
   #typedText, #typedText2, #typedText3 {
-    font-size: 14px;
-  }
+    font-size: 14px;
+  }
 }
-
 
 
 
