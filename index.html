@@ -1,0 +1,713 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>HBD love</title>	
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">  
+    <link type="text/css" rel="stylesheet" href="./file/default.css">
+    <script type="text/javascript" src="./file/jquery.min.js"></script>
+    <script type="text/javascript" src="./file/jscex.min.js"></script>
+    <script type="text/javascript" src="./file/jscex-parser.js"></script>
+    <script type="text/javascript" src="./file/jscex-jit.js"></script>
+    <script type="text/javascript" src="./file/jscex-builderbase.min.js"></script>
+    <script type="text/javascript" src="./file/jscex-async.min.js"></script>
+    <script type="text/javascript" src="./file/jscex-async-powerpack.min.js"></script>
+    <script type="text/javascript" src="./file/functions.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./file/love.js" charset="utf-8"></script>
+    <script>
+        function playAudio() {
+            var audio = document.getElementById("myAudio");
+            audio.play();
+        }
+    </script>
+</head>
+<body>
+    <div id="main">
+        <div id="error"><a href="http://www.google.cn/chrome/intl/zh-CN/landing_chrome.html?hl=zh-CN&brand=CHMI">Chrome</a> (<a href="http://firefox.com.cn/download/">Firefox</a>)</div>
+        <audio height="100" width="100" id="myAudio">
+            <source src="audio.mp3" type="audio/mpeg" />
+        </audio>
+        <div id="wrap">
+            <div id="typedText2"></div>
+            <div id="text">
+                <div id="code">
+                </div>
+            </div>
+            <div id="typedText3"></div>
+            <div id="typedText4"></div>
+            <div id="typedText5"></div>
+            <div id="typedText6"></div>
+            <div id="typedText7"></div>
+            <div id="typedText8"></div>
+            <div id="typedText9"></div>
+            <div id="typedText10"></div>
+            <div id="typedText11"></div>
+            <div id="typedText12"></div>
+            <div id="typedText13"></div>
+            <div id="clock-box">
+                <span id="clock">577 days 0 hours 0 minutes 0 seconds</span> <!-- Change to "6940 days..." if needed -->
+            </div>
+            <canvas id="canvas" width="1100" height="680"></canvas>
+            <img id="tabijalan" src="tabijalan.gif" alt="tabi jalan">
+            <img id="tabihalo" src="halotabi.gif" alt="tabi halo">
+            <img id="tabikopi" src="tabikopi.gif" alt="tabi kopi">
+            <img id="kucinglari" src="kucing.gif" alt="kucing berlari">
+            <img id="tabilarikejar" src="tabilari.gif" alt="tabi lari kejar">
+            <img id="tabitidur" src="tabitidur.gif" alt="tabi tidur">
+            <img id="ayunantabi" src="ayunantabi.gif" alt="tabi ayunan">
+            <div id="typedText"></div>
+
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        var canvas = $('#canvas');
+		
+        if (!canvas[0].getContext) {
+            $("#error").show();
+            return false;
+        }
+
+        var width = canvas.width();
+        var height = canvas.height();        
+        canvas.attr("width", width);
+        canvas.attr("height", height);
+
+        var opts = {
+            seed: {
+                x: width / 2 - 20,
+                scale: 2
+            },
+            branch: [
+                [535, 680, 570, 250, 500, 200, 30, 100, [
+                    [540, 500, 455, 417, 340, 400, 13, 100, [
+                        [450, 435, 434, 430, 394, 395, 2, 40]
+                    ]],
+                    [550, 445, 600, 356, 680, 345, 12, 100, [
+                        [578, 400, 648, 409, 661, 426, 3, 80]
+                    ]],
+                    [539, 281, 537, 248, 534, 217, 3, 40],
+                    [546, 397, 413, 247, 328, 244, 9, 80, [
+                        [427, 286, 383, 253, 371, 205, 2, 40],
+                        [498, 345, 435, 315, 395, 330, 4, 60]
+                    ]],
+                    [546, 357, 608, 252, 678, 221, 6, 100, [
+                        [590, 293, 646, 277, 648, 271, 2, 80]
+                    ]]
+                ]] 
+            ],
+            bloom: {
+                num: 1700,
+                width: 1080,
+                height: 650,
+            },
+            footer: {
+                width: 1100,
+                height: 5,
+                speed: 10,
+            }
+        }
+
+        var tree = new Tree(canvas[0], width, height, opts);
+        var seed = tree.seed;
+        var foot = tree.footer;
+        var hold = 1;
+
+        canvas.click(function(e) {
+        var offset = canvas.offset(), x, y;
+        x = e.pageX - offset.left;
+        y = e.pageY - offset.top;
+        if (seed.hover(x, y)) {
+                playAudio();
+                hold = 0;
+                canvas.unbind("click");
+                canvas.unbind("mousemove");
+                canvas.removeClass('hand');
+
+                runAsync().start();           // 🌳 mulai animasi pohon
+                cycleBackgroundsStopAtLast(); // 🌄 background mulai berganti
+                textAnimate().start();        // teks ketik mulai
+        } 
+        else {
+            // klik di luar seed tidak melakukan apa pun
+            console.log("Klik di luar seed, tidak terjadi apa-apa.");
+        }
+
+        }).mousemove(function(e) {
+            var offset = canvas.offset(), x, y;
+            x = e.pageX - offset.left;
+            y = e.pageY - offset.top;
+            canvas.toggleClass('hand', seed.hover(x, y));
+        });
+
+        var seedAnimate = eval(Jscex.compile("async", function () {
+            seed.draw();
+            while (hold) {
+                $await(Jscex.Async.sleep(10));
+            }
+            while (seed.canScale()) {
+                seed.scale(0.95);
+                $await(Jscex.Async.sleep(10));
+            }
+            while (seed.canMove()) {
+                seed.move(0, 3.5);
+                foot.draw();
+                $await(Jscex.Async.sleep(10));
+            }
+        }));
+
+        var growAnimate = eval(Jscex.compile("async", function () {
+            do {
+                tree.grow();
+                $await(Jscex.Async.sleep(7));
+            } while (tree.canGrow());
+        }));
+
+        var flowAnimate = eval(Jscex.compile("async", function () {
+            do {
+                tree.flower(10);
+                $await(Jscex.Async.sleep(10));
+            } while (tree.canFlower());
+        }));
+
+        var moveAnimate = eval(Jscex.compile("async", function () {
+            tree.snapshot("p1", 240, 0, 610, 680);
+            while (tree.move("p1", 500, 0)) {
+                foot.draw();
+                $await(Jscex.Async.sleep(10));
+            }
+            foot.draw();
+            tree.snapshot("p2", 500, 0, 610, 680);
+
+            canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
+            $await(Jscex.Async.sleep(300));
+            canvas.css("background", "none");
+        }));
+
+        // 🌱 FUNGSI BARU: hanya untuk menampilkan seed saat halaman dibuka
+        function drawSeedOnly() {
+            seed.draw(); // menggambar benih tanpa menjalankan animasi
+        }
+        
+        var runAsync = eval(Jscex.compile("async", function () {
+            $await(seedAnimate());
+            $await(growAnimate());
+            $await(flowAnimate());
+            $await(moveAnimate());
+            $await(typeText("typedText", [
+                "Ada sebuah cerita,",
+                "Tentang sebuah objek abstrak yang turun ke Bumi,",
+                "Tanpa identitas, tanpa perasaan, ia tak mengerti mengapa ia hadir di dunia ini,"
+            ], 55, 550));
+
+            $await(Jscex.Async.sleep(10300)); // jeda 1 detik
+            $("#typedText2"). fadeIn(100); // munculkan div dengan efek halus
+            $await(typeText("typedText2", [
+                "Dengan mengambil wujud seorang perempuan yang cantik dan lucu,",
+                "Ia berkelana untuk belajar banyak hal baru dan mencari makna dari keberadaannya,",
+                "Benar, pengelana itu bernama..."
+            ], 55, 550));
+
+            // 🕓 Setelah teks kedua selesai
+            $await(Jscex.Async.sleep(11800)); // tunggu 1 detik
+
+            // Hapus semua teks (fade out)
+            $("#typedText, #typedText2").fadeOut(1500);
+            $await(Jscex.Async.sleep(2000)); // tunggu sampai fade out selesai
+
+            // 🌟 Munculkan teks ke-3 (langsung fade in, tanpa animasi ketik)
+            // 🌟 Fade in teks ke-3
+            $("#typedText3")
+                .text("TABI NOJI")
+                .css("display", "block")
+                .animate({ opacity: 1 }, 3000); // durasi 3 detik
+
+            // ⏳ Tunggu fade-in selesai (3 detik) + jeda 2 detik tambahan sebelum Tabi muncul
+            $await(Jscex.Async.sleep(4000));
+
+            // 🌸 Setelah itu baru tampil animasi Tabi
+            mulaiAnimasiTabi();
+        }));
+
+
+        // 🌱 Gambar seed saat halaman dibuka
+        drawSeedOnly();
+
+        // ✨ fungsi animasi Tabi baru ✨
+       function mulaiAnimasiTabi() {
+    const tabiJalan = document.getElementById("tabijalan");
+    const tabiHalo  = document.getElementById("tabihalo");
+    const canvas    = document.getElementById("canvas");
+
+    const canvasWidth = canvas.width;
+    const posisiMasuk = -200;                // mulai dari luar kiri
+    const posisiBerhenti = canvasWidth * 0.15; // berhenti di 1/10 kanvas
+    const posisiKeluarKiri = -250;              // keluar ke kiri
+
+    const durasiMasuk = 4000;   // waktu dari kiri ke 1/10 (ms)
+    const durasiHalo = 3000;    // lama tampil tabi halo (ms)
+    const durasiKeluar = 4000;  // waktu jalan keluar ke kiri (ms)
+
+    // Reset tampilan
+    tabiJalan.style.display = "none";
+    tabiHalo.style.display  = "none";
+
+    // 🌟 Tahap 1 — TABI JALAN MASUK dari kiri ke 1/10 kanvas
+    tabiJalan.style.left = posisiMasuk + "px";
+    tabiJalan.style.display = "block";
+    tabiJalan.style.opacity = "1";
+    tabiJalan.style.transform = "scaleX(-1)"; // menghadap kanan
+
+    tabiJalan.animate([
+        { left: posisiMasuk + "px" },
+        { left: posisiBerhenti + "px" }
+    ], {
+        duration: durasiMasuk,
+        easing: "linear",
+        fill: "forwards"
+    });
+
+    // 🌟 Tahap 2 — Ganti ke TABI HALO setelah sampai di posisi berhenti
+    setTimeout(() => {
+        tabiJalan.style.display = "none";
+        tabiHalo.style.left = posisiBerhenti + "px";
+        tabiHalo.style.display = "block";
+
+        // Setelah beberapa detik, kembali ke TABI JALAN dan keluar ke kiri (mirror)
+        setTimeout(() => {
+            tabiHalo.style.display = "none";
+            tabiJalan.style.display = "block";
+            tabiJalan.style.left = posisiBerhenti + "px";
+            tabiJalan.style.transform = "scaleX(1)"; // 🔁 balik arah (mirror terhadap sumbu Y)
+            tabiJalan.style.opacity = "1";
+
+            // 🌟 Tahap 3 — TABI JALAN keluar ke kiri
+            tabiJalan.animate([
+                { left: posisiBerhenti + "px" },
+                { left: posisiKeluarKiri + "px" }
+            ], {
+                duration: durasiKeluar,
+                easing: "linear",
+                fill: "forwards"
+            });
+
+            // Sembunyikan setelah keluar
+            setTimeout(() => {
+                tabiJalan.style.display = "none";
+                tabiJalan.style.transform = "scaleX(-1)"; // reset ke arah normal
+                $("#typedText3").css("opacity", 0);
+                setTimeout(() => {
+                // Pastikan typedText4 terlihat dulu
+                $("#typedText4").css("opacity", 1).show();
+                // Animasi ketik seperti teks1
+                typeText("typedText4", [
+                    "Bagaimana jika kita memulai semua ini dengan secangkir kopi hangat?",
+                    "Kehangatan yang sederhana, namun cukup untuk membuat dunia terasa lebih akrab,"
+                ], 55, 550);
+                // ☕ Munculkan Tabi Kopi 2 detik setelah TEKS 4 DIMULAI
+                setTimeout(() => {
+                    const tabikopi = $("#tabikopi");
+                    tabikopi.css({ display: "block", opacity: 0 });
+                    tabikopi.animate({ opacity: 1 }, 2000); // animasi fade in halus
+                }, 3000);
+                setTimeout(() => {
+                    $("#typedText5").fadeIn(200); // efek fade dulu seperti text2
+                    typeText("typedText5", [
+                        "Lihat, sekarang senyum tipis sudah terlihat dari bibirnya,",
+                        "Dia mulai menikmati ini,",
+                        "Tanda siap untuk memulai hari yang bahagia."
+                    ], 55, 550);
+
+                    // 🌟 Setelah teks 5 selesai diketik (tunggu 3 detik)
+                    setTimeout(() => {
+                        // Fade out teks 4, teks 5, dan tabi kopi bersamaan
+                        $("#typedText4, #typedText5").animate({ opacity: 0 }, 2000, function() {
+                            $(this).hide();
+                        });
+
+                        // Tapi untuk tabi kopi, gunakan fadeOut() agar efeknya benar-benar halus
+                        $("#tabikopi").fadeOut(2000);
+                        // 🌟 2 detik setelah fade out selesai → munculkan teks 6
+                        setTimeout(() => {
+                            $("#typedText6").css("opacity", 0).show().animate({ opacity: 1 }, 1500);
+                            typeText("typedText6", [
+                                "'MIAWWW...!!!'",
+                                "Oh tidak, kucing kesayangannya lari,",
+                                "'Tunggu...'",
+                                "'Meong ayo ke sini'",
+                                "*GUBRRAAAKK!!!",
+                                "'Heh Meong jangan masuk ke sana!'",
+                                "Ternyata jadi hari yang cukup sibuk ya..."
+                            ], 55, 550);
+                            // setelah text 6 selesai ketik
+                            setTimeout(() => {
+                                // Fade out text6 pelan
+                                $("#typedText6").animate({ opacity: 0 }, 2000, function() {
+                                    $(this).hide();
+                                });
+
+                                // Mulai fade in text7 setelah text6 benar-benar hilang
+                                setTimeout(() => {
+                                    $("#typedText7").css({
+                                        display: "block",
+                                        opacity: 0
+                                    }).animate({ opacity: 1 }, 1500);
+
+                                    typeText("typedText7", [
+                                        "Kira-kira makanan apa ya yang enak untuk makan siang...",
+                                        "Sate Ayam?",
+                                        "Kedengarannya enak, aku sudah lama tidak makan itu.",
+                                        "Hmm?",
+                                        "Kau bertanya apakah Tabi berhasil menangkap kucingnya?",
+                                        "Entahlah, aku juga tidak tahu,",
+                                        "Coba tanyakan sendiri ke orangnya langsung."
+                                    ], 55, 550);
+                                    // Setelah text7 selesai diketik
+                                    setTimeout(() => {
+                                        // Fade out text7
+                                        $("#typedText7").animate({ opacity: 0 }, 2000, function() {
+                                            $(this).hide();
+                                        });
+
+                                        // Setelah 2 detik fade out, munculkan text8
+                                        setTimeout(() => {
+                                            $("#typedText8").css({ display: "block", opacity: 0 })
+                                                .animate({ opacity: 1 }, 1500);
+
+                                            typeText("typedText8", [
+                                                "Senja...",
+                                                "Adalah teman terbaik ketika melakukan sebuah hobi,",
+                                                "Apa yang akan Tabi lakukan sore ini?",
+                                                "Bernyanyi?",
+                                                "Menggambar?",
+                                                "Oh ternyata dia membaca sebuah buku."
+                                            ], 55, 550);
+                                            // Setelah text8 selesai diketik
+                                            setTimeout(() => {
+                                                // 🔸 Tunggu 2 detik sebelum fade out
+                                                setTimeout(() => {
+                                                    $("#typedText8").animate({ opacity: 0 }, 2000, function() {
+                                                        $(this).hide();
+                                                    });
+
+                                                    // 🔸 Setelah fade out + 2 detik jeda, munculkan text9
+                                                    setTimeout(() => {
+                                                        $("#typedText9").css({
+                                                            display: "block",
+                                                            opacity: 0
+                                                        }).animate({ opacity: 1 }, 1500);
+
+                                                        typeText("typedText9", [
+                                                            "'zzz'",
+                                                            "Suara apa itu?",
+                                                            "Asalnya seperti dari Tabi,",
+                                                            "Astaga, dia malah tertidur,",
+                                                            "Sepertinya dia terlalu lelah mengejar kucing kesayangannya,",
+                                                            "AH! Aku punya ide,",
+                                                            "Gimana kalo kita jahilin sedikit saja dia,",
+                                                            "Kita gambar-gambar di mukanya dengan spidol warna-warni,",
+                                                            "sssstttt jangan sampai ketahuan sama dia."
+                                                        ], 55, 550);
+                                                        setTimeout(() => {
+                                                            const tabitidur = $("#tabitidur");
+                                                            tabitidur.css({ display: "block", opacity: 0 });
+                                                            tabitidur.animate({ opacity: 1 }, 2000);
+                                                        }, 3000);
+                                                        setTimeout(() => {
+                                                            // Tunggu 2 detik, lalu fade out text9 dan tabi tidur
+                                                            setTimeout(() => {
+                                                                $("#typedText9, #tabitidur").animate({ opacity: 0 }, 2000, function() {
+                                                                    $(this).hide();
+                                                                });
+
+                                                                // 2 detik setelah fade out selesai, munculkan text10
+                                                                setTimeout(() => {
+                                                                    $("#typedText10").css({ display: "block", opacity: 0 })
+                                                                        .animate({ opacity: 1 }, 1500);
+                                                                    typeText("typedText10", [
+                                                                        "Ah, sudah mulai malam...",
+                                                                        "Waktu berlalu begitu cepat...",
+                                                                        "Tidak terasa, ini menandakan sudah 1 tahun baginya hadir di Bumi ini,",
+                                                                        "Apakah ini artinya kita akan berpisah?",
+                                                                        "Tentu saja tidak,",
+                                                                        "Keseharian ini... akan terus berlanjut."
+                                                                    ], 55, 550);
+                                                                    setTimeout(() => {
+                                                                        $("#ayunantabi").css({ display: "block", opacity: 0 })
+                                                                            .animate({ opacity: 1 }, 2000);
+                                                                    }, 3000);
+
+                                                                    // ✅ Setelah text10 selesai → 2 detik jeda → hanya text10 yang fade out → text11 muncul
+                                                                    setTimeout(() => {
+                                                                        $("#typedText10").animate({ opacity: 0 }, 2000, function() {
+                                                                            $(this).hide();
+                                                                        });
+
+                                                                        setTimeout(() => {
+                                                                            $("#typedText11")
+                                                                            .css({ display: "block", opacity: 0 })
+                                                                            .animate({ opacity: 1 }, 1500);
+                                                                            typeText("typedText11", [
+                                                                                "Benar... akan terus berlanjut...",
+                                                                                "Karena akan selalu ada paragraf baru yang belum di tulis,",
+                                                                                "Karena akan selalu ada lembaran baru yang belum dibuka,",
+                                                                                "Karena akan selalu ada yang menantikan dirinya hadir di hari esok,",
+                                                                                "Maka dari itu,",
+                                                                                "Ini akan menjadi cerita yang selalu kita nantikan.",
+                                                                            ], 75,7500);
+
+                                                                            // 🌟 Setelah teks 11 selesai diketik
+                                                                            setTimeout(() => {
+                                                                                // Tunggu 5 detik, lalu fade out teks 11
+                                                                                setTimeout(() => {
+                                                                                    $("#typedText11").animate({ opacity: 0 }, 2000, function() {
+                                                                                        $(this).hide();
+                                                                                    });
+
+                                                                                    // Setelah fade out selesai, munculkan teks 12
+                                                                                    setTimeout(() => {
+                                                                                        $("#typedText12")
+                                                                                            .text("THE END")
+                                                                                            .css({ display: "block", opacity: 0 })
+                                                                                            .animate({ opacity: 1 }, 3000, function() {
+                                                                                                // Setelah fade in selesai → tahan 5 detik
+                                                                                                setTimeout(() => {
+                                                                                                    // 🌙 Fade out teks 12
+                                                                                                    $("#typedText12").css("display", "block"); // pastikan tampil
+                                                                                                    $("#typedText12").animate({ opacity: 0 }, 2000, function() {
+                                                                                                        $(this).css("display", "none");
+                                                                                                        // 🌸 Setelah fade out selesai, munculkan teks 13
+                                                                                                        $("#typedText13")
+                                                                                                            .text("BONUS")
+                                                                                                            .css({ display: "block", opacity: 0 })
+                                                                                                            .animate({ opacity: 1 }, 3000, function () {
+
+                                                                                                                // tunggu 4 detik lalu fade out
+                                                                                                                setTimeout(() => {
+                                                                                                                    $("#typedText13").animate({ opacity: 0 }, 2500, function () {
+                                                                                                                        $(this).hide();
+                                                                                                                    });
+                                                                                                                }, 4000);
+                                                                                                            });
+                                                                                                    });
+                                                                                                }, 3000); // jeda 5 detik sebelum fade out
+                                                                                            });
+                                                                                    }, 2000); // setelah fade out teks 11 selesai
+                                                                                }, 5000); // tunggu 5 detik setelah teks 11 selesai diketik
+                                                                            }, 58500); // durasi ketik teks 11 (biar sinkron)
+                                                                        }, 2000);
+                                                                    }, 18000); // sesuaikan durasi ini dengan durasi ketik text 10
+                                                                }, 4000); // jeda 2 detik setelah fade out
+                                                            }, 2000); // tahan 2 detik setelah text9 selesai
+                                                        }, 23000); // sesuaikan durasi ini dengan panjang animasi ketik text9
+                                                    }, 2000); // 2 detik fade out + 2 detik jeda
+                                                }, 2000); // tahan 2 detik setelah text 8 selesai
+                                            }, 11000); // kira-kira durasi total animasi ketik text 8
+                                            // 🌙 5 detik setelah text8 mulai diketik, tampilkan Tabi tidur
+                                        }, 5000); // jeda 2 detik setelah fade out text7
+                                    }, 20000);
+                                }, 3000);
+                            }, 15000); // 5 detik durasi ketik + 2 detik jeda + 2 detik fade out
+                            // 🐾 2 detik setelah typedText6 DIMULAI
+                            setTimeout(() => {
+                                const kucing = $("#kucinglari");
+                                const tabi = $("#tabilarikejar");
+                                const canvasWidth = $("#canvas").width();
+
+                                // Reset kondisi awal
+                                kucing.stop(true, true).css({
+                                    display: "block",
+                                    right: "-180px",
+                                    transform: "scaleX(1)" // menghadap kiri saat masuk dari kanan
+                                });
+                                tabi.stop(true, true).css({
+                                    display: "block",
+                                    right: "-250px",
+                                    transform: "scaleX(1)" // tetap di belakang & menghadap kiri
+                                });
+
+                                // Durasi gerak
+                                const durasiLari = 9000;
+
+                                // ----------------------------------------------------
+                                // GERAK PERTAMA: Masuk dari kanan ➜ keluar ke kiri
+                                // ----------------------------------------------------
+                                kucing.animate({ right: canvasWidth + 200 }, {
+                                    duration: durasiLari,
+                                    easing: "linear",
+                                    complete: function() {
+                                        $(this).hide();
+                                    }
+                                });
+
+                                setTimeout(() => {
+                                    tabi.animate({ right: canvasWidth + 100 }, {
+                                        duration: durasiLari,
+                                        easing: "linear",
+                                        complete: function() {
+                                            $(this).hide();
+                                        }
+                                    });
+                                }, 700); // tabi terlambat sedikit
+
+                                // ----------------------------------------------------
+                                // GERAK KEDUA: MIRROR ➜ masuk dari kiri ➜ keluar kanan
+                                setTimeout(() => {
+                                    // Reset posisi masuk dari kiri
+                                    kucing.stop(true, true).css({
+                                        display: "block",
+                                        left: "-180px",
+                                        transform: "scaleX(-1)" // menghadap kiri saat masuk dari kanan
+                                    });
+                                    tabi.stop(true, true).css({
+                                        display: "block",
+                                        left: "-250px",
+                                        transform: "scaleX(-1)" // tetap di belakang & menghadap kiri
+                                    });
+
+                                    // Kucing lari ke kanan
+                                    kucing.animate({ left: canvasWidth + 200 }, {
+                                        duration: durasiLari,
+                                        easing: "linear",
+                                        complete: function() { $(this).hide(); }
+                                    });
+
+                                    // Tabi mengejar 0.7 detik kemudian
+                                    setTimeout(() => {
+                                        tabi.animate({ left: canvasWidth + 100 }, {
+                                            duration: durasiLari,
+                                            easing: "linear",
+                                            complete: function() { $(this).hide(); }
+                                        });
+                                    }, 700);
+                                }, durasiLari + 500);
+                                setTimeout(() => {
+                                    kucing.stop(true, true).css({
+                                        display: "block",
+                                        right: "-180px",
+                                        left: "auto",
+                                        transform: "scaleX(1)" // menghadap kiri (masuk dari kanan)
+                                    });
+                                    tabi.stop(true, true).css({
+                                        display: "block",
+                                        right: "-250px",
+                                        left: "auto",
+                                        transform: "scaleX(1)" // tetap di belakang kucing
+                                    });
+
+                                    kucing.animate({ right: canvasWidth + 200 }, {
+                                        duration: durasiLari,
+                                        easing: "linear",
+                                        complete: function() { $(this).hide(); }
+                                    });
+                                    setTimeout(() => {
+                                        tabi.animate({ right: canvasWidth + 100 }, {
+                                            duration: durasiLari,
+                                            easing: "linear",
+                                            complete: function() { $(this).hide(); }
+                                        });
+                                    }, 700);
+                                }, (durasiLari + 500) * 2); // dijadwalkan setelah gerakan kedua selesai
+                                setTimeout(() => {
+                                    kucing.stop(true, true).css({
+                                        display: "block",
+                                        left: "-180px",
+                                        right: "auto",
+                                        transform: "scaleX(-1)" // menghadap kiri (masuk dari kanan)
+                                    });
+                                    tabi.stop(true, true).css({
+                                        display: "block",
+                                        left: "-250px",
+                                        right: "auto",
+                                        transform: "scaleX(-1)" // tetap di belakang kucing
+                                    });
+
+                                    kucing.animate({ left: canvasWidth + 200 }, {
+                                        duration: durasiLari,
+                                        easing: "linear",
+                                        complete: function() { $(this).hide(); }
+                                    });
+                                    setTimeout(() => {
+                                        tabi.animate({ left: canvasWidth + 100 }, {
+                                            duration: durasiLari,
+                                            easing: "linear",
+                                            complete: function() { $(this).hide(); }
+                                        });
+                                    }, 700);
+                                }, (durasiLari + 500) * 3);
+                            }, 2000); // 2 DETIK SETELAH TEKS 6 MULAI
+                        }, 4000); // 2 detik fade + 2 detik jeda
+                    }, 13000); // 11 detik teks4 + 3 detik jeda teks5
+                }, 11000);
+            }, 5000);
+        }, durasiKeluar + 200);
+
+        }, durasiHalo);
+
+    }, durasiMasuk);
+}
+
+
+
+    // 🔹 Setelah selesai semua,
+
+        // Daftar gambar + durasi (ms)
+       // 🌄 GANTI BACKGROUND OTOMATIS TANPA PENGULANGAN
+        const backgrounds = [
+        { src: "pagi.png", duration: 79000 },  // tampil 5 detik
+        { src: "siang.png", duration: 42000 },  // tampil 8 detik
+        { src: "senja.png", duration: 44000 }, // tampil 10 detik
+        { src: "malam.png", duration: 28500 },   // tampil 7 detikx
+        { src: "png1.jpg", duration: 2000 },   // tampil 7 detikx
+        { src: "png2.jpg", duration: 3000 },
+        { src: "png3.jpg", duration: 3000 },
+        { src: "png5.jpg", duration: 3500 },
+        { src: "png6.jpg", duration: 3500 },
+        { src: "png7.jpg", duration: 3000 },
+        { src: "png8.jpg", duration: 3000 },
+        { src: "png9.jpg", duration: 7500 },
+        { src: "png12.png", duration: 8500 },
+        { src: "png13.jpg", duration: 3000 },
+        { src: "png14.jpeg", duration: 3000 },
+        { src: "png15.jpeg", duration: 3000 },
+        { src: "png16.jpeg", duration: 3000 },
+        { src: "malam.png", duration: 5000 },
+        ];
+
+        let currentBg = 0;
+
+        // fungsi untuk ganti background
+        function setBackground(index) {
+        document.body.style.backgroundImage = "url('" + backgrounds[index].src + "')";
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundRepeat = "no-repeat";
+        document.body.style.transition = "background-image 1s ease-in-out";
+        }
+
+        // fungsi utama untuk ganti otomatis tanpa looping
+        function cycleBackgroundsStopAtLast() {
+            if (currentBg >= backgrounds.length) return;
+
+            setBackground(currentBg);
+
+            if (currentBg < backgrounds.length - 1) {
+                setTimeout(() => {
+                currentBg++;
+                cycleBackgroundsStopAtLast(); // panggil lagi
+                }, backgrounds[currentBg].duration);
+            }
+        }
+
+        // 🌅 Background awal (pagi) saat web pertama kali dibuka
+        window.addEventListener("load", () => {
+        document.body.style.backgroundImage = "url('pagi.png')";
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundRepeat = "no-repeat";
+        document.body.style.transition = "background-image 1s ease-in-out";
+        });
+        })();
+    </script>
+</body>
+</html>
