@@ -9,13 +9,22 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
   font-size: 14px;
   font-family: sans-serif;
   overflow: hidden;
-  transition: background-image 1s ease-in-out; /* biar halus waktu ganti */
+}
+
+#bgVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 1;                /* 🔥 awalnya tidak terlihat */
+    transition: none;    /* efek fade */
+    pointer-events: none;
 }
 
 a {
@@ -28,16 +37,20 @@ a {
 #wrap {
   position: relative;
   margin: 0 auto;
-  width: 1100px;
-  height: 680px;
+  width: 100%;
+  max-width: 1100px;
+  aspect-ratio: 1100 / 680;
   margin-top: 10px;
   overflow: hidden;
 }
 
 #canvas {
-  margin: 0 auto;
-  width: 1100px;
-  height: 680px;
+  width: 100%;
+  height: 100%;
+}
+
+#error {
+  display: none !important;
 }
 
 #typedText {
@@ -370,9 +383,6 @@ a {
   width: 1100px;
   height: 680px;
 }
-#error {
-  display: none !important;
-}
 .hand {
   cursor: pointer;
 }
@@ -388,8 +398,5 @@ a {
   margin-top:450px;
   font-size: 25px;
   font-family: monospace;
+
 }
-
-
-
-
