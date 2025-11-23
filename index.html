@@ -2,7 +2,7 @@
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Happy Anniversary!!!</title>	
+    <title>HBD love</title>	
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet"> 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">  
     <link type="text/css" rel="stylesheet" href="./file/default.css">
@@ -23,6 +23,9 @@
     </script>
 </head>
 <body>
+    <video id="bgVideo" muted playsinline style="display:none">
+        <source src="video.mp4" type="video/mp4">
+    </video>
     <div id="main">
         <div id="error"><a href="http://www.google.cn/chrome/intl/zh-CN/landing_chrome.html?hl=zh-CN&brand=CHMI">Chrome</a> (<a href="http://firefox.com.cn/download/">Firefox</a>)</div>
         <audio height="100" width="100" id="myAudio">
@@ -120,16 +123,24 @@
         x = e.pageX - offset.left;
         y = e.pageY - offset.top;
         if (seed.hover(x, y)) {
-                playAudio();
-                hold = 0;
-                canvas.unbind("click");
-                canvas.unbind("mousemove");
-                canvas.removeClass('hand');
+            playAudio();
 
-                runAsync().start();           // 🌳 mulai animasi pohon
-                cycleBackgroundsStopAtLast(); // 🌄 background mulai berganti
-                textAnimate().start();        // teks ketik mulai
-        } 
+            
+            const bgVideo = document.getElementById("bgVideo");
+            bgVideo.style.display = "block";
+            bgVideo.currentTime = 0;
+            bgVideo.play();
+            document.body.style.backgroundImage = "none";
+
+            hold = 0;
+            canvas.unbind("click");
+            canvas.unbind("mousemove");
+            canvas.removeClass('hand');
+
+            runAsync().start();
+            textAnimate().start();
+        }
+
         else {
             // klik di luar seed tidak melakukan apa pun
             console.log("Klik di luar seed, tidak terjadi apa-apa.");
@@ -648,70 +659,14 @@
 
     }, durasiMasuk);
 }
-
-
-
-    // 🔹 Setelah selesai semua,
-
-        // Daftar gambar + durasi (ms)
-       // 🌄 GANTI BACKGROUND OTOMATIS TANPA PENGULANGAN
-        const backgrounds = [
-        { src: "pagi.png", duration: 79000 },  // tampil 5 detik
-        { src: "siang.png", duration: 42000 },  // tampil 8 detik
-        { src: "senja.png", duration: 44000 }, // tampil 10 detik
-        { src: "malam.png", duration: 28500 },   // tampil 7 detikx
-        { src: "png1.jpg", duration: 2000 },   // tampil 7 detikx
-        { src: "png2.jpg", duration: 3000 },
-        { src: "png3.jpg", duration: 3000 },
-        { src: "png5.jpg", duration: 3500 },
-        { src: "png6.jpg", duration: 3500 },
-        { src: "png7.jpg", duration: 3000 },
-        { src: "png8.jpg", duration: 3000 },
-        { src: "png9.jpg", duration: 7500 },
-        { src: "png12.png", duration: 8500 },
-        { src: "png13.jpg", duration: 3000 },
-        { src: "png14.jpeg", duration: 3000 },
-        { src: "png15.jpeg", duration: 3000 },
-        { src: "png16.jpeg", duration: 3000 },
-        { src: "malam.png", duration: 5000 },
-        ];
-
-        let currentBg = 0;
-
-        // fungsi untuk ganti background
-        function setBackground(index) {
-        document.body.style.backgroundImage = "url('" + backgrounds[index].src + "')";
-        document.body.style.backgroundSize = "cover";
-        document.body.style.backgroundRepeat = "no-repeat";
-        document.body.style.transition = "background-image 1s ease-in-out";
-        }
-
-        // fungsi utama untuk ganti otomatis tanpa looping
-        function cycleBackgroundsStopAtLast() {
-            if (currentBg >= backgrounds.length) return;
-
-            setBackground(currentBg);
-
-            if (currentBg < backgrounds.length - 1) {
-                setTimeout(() => {
-                currentBg++;
-                cycleBackgroundsStopAtLast(); // panggil lagi
-                }, backgrounds[currentBg].duration);
-            }
-        }
-
         // 🌅 Background awal (pagi) saat web pertama kali dibuka
         window.addEventListener("load", () => {
-        document.body.style.backgroundImage = "url('pagi.png')";
+        document.body.style.backgroundImage = "url('pagi.jpg')";
         document.body.style.backgroundSize = "cover";
         document.body.style.backgroundRepeat = "no-repeat";
-        document.body.style.transition = "background-image 1s ease-in-out";
+        document.body.style.backgroundPosition = "center";
         });
         })();
     </script>
 </body>
-
 </html>
-
-
-
